@@ -1,5 +1,6 @@
 package com.devsuperior.aula.Services;
 
+import com.devsuperior.aula.dto.PersonDTO;
 import com.devsuperior.aula.dto.PersonDepartmentDTO;
 import com.devsuperior.aula.entities.Department;
 import com.devsuperior.aula.entities.Person;
@@ -70,7 +71,24 @@ public class PersonService {
         //Reconverto a entidade que eu acabei de salvar no banco para ProductDTO para passar para o Controller
         return new PersonDepartmentDTO(entity); //Retorno um novo PersonDepartmentDTO passando a entidade que eu acabei de criar para o construtor do PersonDepartmentDTO e la no construtor de PersonDepartmentDTO voce vai criar um novo objeto DepartmentDTO e acessar os dados dentro do DepartmentDTO do respectivo departamento
     }
+
+    public PersonDTO insert(PersonDTO dto){
+
+        Person entity = new Person();
+        entity.setName(dto.getName());
+        entity.setSalary(dto.getSalary());
+
+        Department dept = departmentRepository.getReferenceById(dto.getDepartmentId()); //Dentro do proprio PersonDTO eu acesso o DepartmentId diretamente
+
+        entity.setDepartment(dept); //Associando o departamento pelo id que eu peguei armazenado na variavel dept acima com a entidade pessoa (associando os dois objetos)
+
+        entity = repository.save(entity);// Salvo no banco a entidade nova passada pelo corpo da requisicao
+
+        return new PersonDTO(entity); //Retorno um novo PersonDTO passando a entidade que eu acabei de criar para o construtor do PersonDTO e la no construtor de PersonDTO voce vai acessar o id do departamento. Entao dentro do objeto PersonDTO voce vai ter um campo (Atributo) com o id do departamento e nao uma referencia para um outro objeto Departamenton criado
+
+    }
 }
+
 
 /*
 -----------------------------------------------------------------------------------------
